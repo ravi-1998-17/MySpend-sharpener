@@ -1,0 +1,117 @@
+import React, { useState, useRef } from "react";
+import { Form, Button, Spinner, Container } from "react-bootstrap";
+import classes from "../authentication/Auth.module.css";
+
+function Auth({ setIsLoggedIn }) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const nameRef = useRef();
+
+  const switchModeHandler = () => {
+    setIsLogin((prev) => !prev);
+    setError("");
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const name = nameRef.current?.value;
+
+    try {
+      let url;
+      if (isLogin) {
+        url =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE";
+      } else {
+        url =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE";
+      }
+
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+          returnSecureToken: true,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || "Authentication failed!");
+
+      localStorage.setItem("token", data.idToken);
+      setIsLoggedIn(true);
+    } catch (err) {
+      setError(err.message);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <Container className={`${classes.authContainer} mt-5`}>
+      <Form onSubmit={submitHandler} className={classes.authForm}>
+        <h3 className="text-center mb-3">{isLogin ? "Login" : "Sign Up"}</h3>
+
+        {!isLogin && (
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Name"
+              ref={nameRef}
+              required
+            />
+          </Form.Group>
+        )}
+
+        <Form.Group className="mb-3">
+          <Form.Control type="email" placeholder="Email" ref={emailRef} required />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Control type="password" placeholder="Password" ref={passwordRef} required />
+        </Form.Group>
+
+        {error && <p className="text-danger text-center">{error}</p>}
+
+        {loading ? (
+          <div className="text-center">
+            <Spinner animation="border" size="sm" /> <span>Requesting...</span>
+          </div>
+        ) : (
+          <Button type="submit" className={classes.submitBtn}>
+            {isLogin ? "Login" : "Sign Up"}
+          </Button>
+        )}
+
+        <div className="text-center mt-3">
+          {isLogin ? (
+            <p>
+              Don’t have an account?{" "}
+              <span className={classes.switchText} onClick={switchModeHandler}>
+                Create Account
+              </span>
+            </p>
+          ) : (
+            <p>
+              Have an account?{" "}
+              <span className={classes.switchText} onClick={switchModeHandler}>
+                Login
+              </span>
+            </p>
+          )}
+        </div>
+      </Form>
+    </Container>
+  );
+}
+
+export default Auth;

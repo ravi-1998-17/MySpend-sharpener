@@ -1,0 +1,13 @@
+.logo {
+  color: var(--blue) !important;
+}
+
+.navLink {
+  color: var(--dark);
+  text-decoration: none; 
+}
+
+.navLink:hover, .navLink:active {
+  color: var(--blue) !important;
+}
+
