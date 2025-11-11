@@ -5,13 +5,12 @@ import { useEffect, useState } from "react";
 import Home from "./pages/home/Home";
 import About from "./pages/about/About";
 import Contact from "./pages/contact/Contact";
-import Auth from "./components/authentication/Auth";
 import Header from "./components/layout/Header";
+import LoginPage from "./pages/login/LoginPage";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // check login status on refresh
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) setIsLoggedIn(true);
@@ -23,7 +22,7 @@ const App = () => {
   };
 
   if (!isLoggedIn) {
-    return <Auth setIsLoggedIn={setIsLoggedIn} />;
+    return <LoginPage setIsLoggedIn={setIsLoggedIn} />;
   }
 
   return (

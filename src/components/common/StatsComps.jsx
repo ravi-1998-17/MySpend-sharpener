@@ -1,15 +1,15 @@
 import React from "react";
 import { Spinner } from "react-bootstrap";
 
-const StatsComps = () => {
+export const LoaderSmall = ({ text = "Requesting..." }) => {
   return (
-    <>
-      <div style={{ textAlign: "center", padding: "20px" }}>
-        <Spinner animation="border" role="status" />
-        <p>Loading...</p>
-      </div>
-    </>
+    <div className="text-center">
+      <Spinner
+        animation="border"
+        size="sm"
+        style={{ color: "var(--pink)" }}
+      />{" "}
+      <span style={{color: "var(--pink)"}}>{text}</span>
+    </div>
   );
 };
-
-export default StatsComps;

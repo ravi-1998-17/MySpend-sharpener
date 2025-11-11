@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Form, Button, Spinner, Container } from "react-bootstrap";
 import classes from "../authentication/Auth.module.css";
+import { LoaderSmall } from "../common/StatsComps";
 
 function Auth({ setIsLoggedIn }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -46,7 +47,8 @@ function Auth({ setIsLoggedIn }) {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.message || "Authentication failed!");
+      if (!res.ok)
+        throw new Error(data.error?.message || "Authentication failed!");
 
       localStorage.setItem("token", data.idToken);
       setIsLoggedIn(true);
@@ -57,9 +59,9 @@ function Auth({ setIsLoggedIn }) {
   };
 
   return (
-    <Container className={`${classes.authContainer} mt-5`}>
+    <Container fluid className={`${classes.authContainer}`}>
       <Form onSubmit={submitHandler} className={classes.authForm}>
-        <h3 className="text-center mb-3">{isLogin ? "Login" : "Sign Up"}</h3>
+        <h3 className="text-center">{isLogin ? "Login" : "Sign Up"}</h3>
 
         {!isLogin && (
           <Form.Group className="mb-3">
@@ -73,19 +75,27 @@ function Auth({ setIsLoggedIn }) {
         )}
 
         <Form.Group className="mb-3">
-          <Form.Control type="email" placeholder="Email" ref={emailRef} required />
+          <Form.Control
+            type="email"
+            placeholder="Email"
+            ref={emailRef}
+            required
+          />
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Control type="password" placeholder="Password" ref={passwordRef} required />
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            ref={passwordRef}
+            required
+          />
         </Form.Group>
 
-        {error && <p className="text-danger text-center">{error}</p>}
+        {error && <p className="text-center" style={{color: "var(--pink)"}}>{error}</p>}
 
         {loading ? (
-          <div className="text-center">
-            <Spinner animation="border" size="sm" /> <span>Requesting...</span>
-          </div>
+          <LoaderSmall text="Requesting..." />
         ) : (
           <Button type="submit" className={classes.submitBtn}>
             {isLogin ? "Login" : "Sign Up"}
