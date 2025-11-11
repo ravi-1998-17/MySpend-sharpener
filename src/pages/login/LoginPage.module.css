@@ -1,0 +1,30 @@
+.loginContainer{
+    background-color: var(--blue);
+    color: var(--light);
+    height: 100vh;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+}
+
+.leftSide{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    flex-direction: column;
+    text-align: center;
+}
+
+.leftSide i {
+    font-size: 20rem !important;
+    height: 425px !important;
+    width: 320px !important;
+}
+
+@media (max-width: 900px) {
+    .leftSide{
+        display: none;
+    }
+}

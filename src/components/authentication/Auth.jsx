@@ -4,6 +4,7 @@ import classes from "../authentication/Auth.module.css";
 import { LoaderSmall } from "../common/StatsComps";
 
 function Auth({ setIsLoggedIn }) {
+  
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -61,48 +62,67 @@ function Auth({ setIsLoggedIn }) {
   return (
     <Container fluid className={`${classes.authContainer}`}>
       <Form onSubmit={submitHandler} className={classes.authForm}>
-        <h3 className="text-center">{isLogin ? "Login" : "Sign Up"}</h3>
+        <div className={classes.welcome}>
+          <h2 className={classes.title}>
+            {isLogin ? "Hello, Again" : "Create Your Account"}
+          </h2>
+          <hr />
+          <p className={classes.subtitle}>
+            <span></span>
+            {isLogin
+              ? "We are happy to have you back."
+              : "Join us and get started in seconds!"}
+          </p>
+        </div>
+        <div className={classes.formFields}>
+          {!isLogin && (
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="text"
+                placeholder="Name"
+                ref={nameRef}
+                required
+                className={classes.inputFields}
+              />
+            </Form.Group>
+          )}
 
-        {!isLogin && (
           <Form.Group className="mb-3">
             <Form.Control
-              type="text"
-              placeholder="Name"
-              ref={nameRef}
+              type="email"
+              placeholder="Email"
+              ref={emailRef}
               required
+              className={classes.inputFields}
             />
           </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              ref={passwordRef}
+              required
+              className={classes.inputFields}
+            />
+          </Form.Group>
+        </div>
+
+        {error && (
+          <p className="text-center" style={{ color: "var(--pink)" }}>
+            {error}
+          </p>
         )}
 
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="email"
-            placeholder="Email"
-            ref={emailRef}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="password"
-            placeholder="Password"
-            ref={passwordRef}
-            required
-          />
-        </Form.Group>
-
-        {error && <p className="text-center" style={{color: "var(--pink)"}}>{error}</p>}
-
         {loading ? (
-          <LoaderSmall text="Requesting..." />
+          <LoaderSmall text="Requesting..."/>
         ) : (
           <Button type="submit" className={classes.submitBtn}>
             {isLogin ? "Login" : "Sign Up"}
           </Button>
         )}
 
-        <div className="text-center mt-3">
+        <div className="text-center mt-5">
           {isLogin ? (
             <p>
               Don’t have an account?{" "}
