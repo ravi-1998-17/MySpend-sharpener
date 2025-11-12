@@ -1,10 +1,13 @@
-import React, { useState, useRef } from "react";
-import { Form, Button, Spinner, Container } from "react-bootstrap";
+import React, { useState, useRef, useContext } from "react";
+import { Form, Button, Container } from "react-bootstrap";
 import classes from "../authentication/Auth.module.css";
 import { LoaderSmall } from "../common/StatsComps";
+import axios from "axios";
+import { AuthContext } from "@/context/AuthContext";
 
-function Auth({ setIsLoggedIn }) {
-  
+const Auth = () => {
+  const { login } = useContext(AuthContext);
+
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,24 +40,22 @@ function Auth({ setIsLoggedIn }) {
           "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE";
       }
 
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true,
-        }),
-        headers: { "Content-Type": "application/json" },
+      const { data } = await axios.post(url, {
+        email,
+        password,
+        returnSecureToken: true,
       });
 
-      const data = await res.json();
-      if (!res.ok)
-        throw new Error(data.error?.message || "Authentication failed!");
+      console.log(data);
 
-      localStorage.setItem("token", data.idToken);
-      setIsLoggedIn(true);
+      login(data.idToken);
+
     } catch (err) {
-      setError(err.message);
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error.message);
+      } else {
+        setError("Authentication failed. Please try again.");
+      }
     }
     setLoading(false);
   };
@@ -68,18 +69,19 @@ function Auth({ setIsLoggedIn }) {
           </h2>
           <hr />
           <p className={classes.subtitle}>
-            <span></span>
             {isLogin
               ? "We are happy to have you back."
               : "Join us and get started in seconds!"}
           </p>
         </div>
+
         <div className={classes.formFields}>
           {!isLogin && (
             <Form.Group className="mb-3">
               <Form.Control
                 type="text"
                 placeholder="Name"
+                name="name"
                 ref={nameRef}
                 required
                 className={classes.inputFields}
@@ -91,6 +93,7 @@ function Auth({ setIsLoggedIn }) {
             <Form.Control
               type="email"
               placeholder="Email"
+              name="email"
               ref={emailRef}
               required
               className={classes.inputFields}
@@ -101,6 +104,7 @@ function Auth({ setIsLoggedIn }) {
             <Form.Control
               type="password"
               placeholder="Password"
+              name="password"
               ref={passwordRef}
               required
               className={classes.inputFields}
@@ -115,7 +119,7 @@ function Auth({ setIsLoggedIn }) {
         )}
 
         {loading ? (
-          <LoaderSmall text="Requesting..."/>
+          <LoaderSmall text="Requesting..." />
         ) : (
           <Button type="submit" className={classes.submitBtn}>
             {isLogin ? "Login" : "Sign Up"}
@@ -125,7 +129,7 @@ function Auth({ setIsLoggedIn }) {
         <div className="text-center mt-5">
           {isLogin ? (
             <p>
-              Don’t have an account?{" "}
+              Don't have an account?{" "}
               <span className={classes.switchText} onClick={switchModeHandler}>
                 Create Account
               </span>
@@ -142,6 +146,6 @@ function Auth({ setIsLoggedIn }) {
       </Form>
     </Container>
   );
-}
+};
 
 export default Auth;

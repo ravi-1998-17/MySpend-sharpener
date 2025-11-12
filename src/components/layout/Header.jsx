@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import classes from "../layout/Header.module.css";
+import LogoutButton from "../common/LogoutButton";
 
 function Header() {
   return (
@@ -23,7 +24,6 @@ function Header() {
           aria-controls="navbar-collapse"
           className="border-0 shadow-none custom-toggle"
         />
-
         <Navbar.Collapse id="navbar-collapse" className="justify-content-end">
           <Nav className="gap-3 fs-5">
             <Nav.Link as={NavLink} to="/" end className={`${classes.navLink}`}>
@@ -41,6 +41,8 @@ function Header() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
+        {/* Logout Button */}
+        <LogoutButton />
       </Container>
     </Navbar>
   );

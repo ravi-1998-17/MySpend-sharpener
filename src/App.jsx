@@ -1,33 +1,22 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Home from "./pages/home/Home";
 import About from "./pages/about/About";
 import Contact from "./pages/contact/Contact";
 import Header from "./components/layout/Header";
 import LoginPage from "./pages/login/LoginPage";
+import { AuthContext } from "./context/AuthContext";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = useContext(AuthContext);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) setIsLoggedIn(true);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-  };
-
-  if (!isLoggedIn) {
-    return <LoginPage setIsLoggedIn={setIsLoggedIn} />;
-  }
+  if (!isLoggedIn) return <LoginPage />;
 
   return (
     <>
-      <Header onLogout={handleLogout} />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
