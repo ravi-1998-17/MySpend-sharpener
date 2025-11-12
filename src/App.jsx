@@ -8,6 +8,8 @@ import Contact from "./pages/contact/Contact";
 import Header from "./components/layout/Header";
 import LoginPage from "./pages/login/LoginPage";
 import { AuthContext } from "./context/AuthContext";
+import Profile from "./pages/profile/Profile";
+import ProfileAlert from "./pages/profile/ProfileAlert";
 
 const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -17,10 +19,13 @@ const App = () => {
   return (
     <>
       <Header />
+      <ProfileAlert />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        {/* PROFILE ROUTE */}
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );

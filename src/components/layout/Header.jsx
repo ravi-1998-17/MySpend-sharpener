@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import classes from "../layout/Header.module.css";
 import LogoutButton from "../common/LogoutButton";
+import ProfileBtn from "@/pages/profile/ProfileBtn";
 
 function Header() {
   return (
@@ -43,6 +44,7 @@ function Header() {
         </Navbar.Collapse>
         {/* Logout Button */}
         <LogoutButton />
+        <ProfileBtn />
       </Container>
     </Navbar>
   );
