@@ -1,3 +1,4 @@
+import { PageLoader  } from "@/components/common/StatsComps";
 import React, { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
@@ -5,6 +6,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(null);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   // Load token from localStorage on mount
   useEffect(() => {
@@ -13,6 +15,7 @@ export const AuthProvider = ({ children }) => {
       setToken(savedToken);
       setIsLoggedIn(true);
     }
+    setIsAuthChecked(true);
   }, []);
 
   // Login function
@@ -31,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, token, login, logout }}>
-      {children}
+      {isAuthChecked ? children : <PageLoader  />}
     </AuthContext.Provider>
   );
 };
