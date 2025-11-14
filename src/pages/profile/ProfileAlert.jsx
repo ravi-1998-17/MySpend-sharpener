@@ -8,9 +8,6 @@ const ProfileAlert = () => {
   const handleCheck = () => {
     navigate("/profile");
   };
-
-
-
   return (
     <Alert
       variant=""

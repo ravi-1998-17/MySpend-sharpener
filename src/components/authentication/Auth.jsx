@@ -9,6 +9,7 @@ const Auth = () => {
   const { login } = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,6 +20,7 @@ const Auth = () => {
   const switchModeHandler = () => {
     setIsLogin((prev) => !prev);
     setError("");
+    setIsForgotPassword(false);
   };
 
   const submitHandler = async (e) => {
@@ -46,10 +48,7 @@ const Auth = () => {
         returnSecureToken: true,
       });
 
-      console.log(data);
-
       login(data.idToken);
-
     } catch (err) {
       if (err.response && err.response.data && err.response.data.error) {
         setError(err.response.data.error.message);
@@ -60,90 +59,180 @@ const Auth = () => {
     setLoading(false);
   };
 
+  const forgotPasswordHandler = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const email = emailRef.current.value;
+
+    try {
+      const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE`;
+
+      await axios.post(url, {
+        requestType: "PASSWORD_RESET",
+        email,
+      });
+
+      alert(
+        "Password reset link has been sent to your email. Please check your inbox."
+      );
+      setIsForgotPassword(false);
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error.message);
+      } else {
+        setError("Failed to send reset email. Try again.");
+      }
+    }
+
+    setLoading(false);
+  };
+
   return (
     <Container fluid className={`${classes.authContainer}`}>
-      <Form onSubmit={submitHandler} className={classes.authForm}>
-        <div className={classes.welcome}>
-          <h2 className={classes.title}>
-            {isLogin ? "Hello, Again" : "Create Your Account"}
-          </h2>
-          <hr />
-          <p className={classes.subtitle}>
-            {isLogin
-              ? "We are happy to have you back."
-              : "Join us and get started in seconds!"}
-          </p>
-        </div>
+      {isForgotPassword ? (
+        <Form onSubmit={forgotPasswordHandler} className={classes.authForm}>
+          <div className={classes.welcome}>
+            <h2 className={classes.title}>Forgot Password</h2>
+            <hr />
+            <p className={classes.subtitle}>
+              Enter your email and we will send you a reset link.
+            </p>
+          </div>
 
-        <div className={classes.formFields}>
-          {!isLogin && (
+          <div className={classes.formFields}>
             <Form.Group className="mb-3">
               <Form.Control
-                type="text"
-                placeholder="Name"
-                name="name"
-                ref={nameRef}
+                type="email"
+                placeholder="Email"
+                ref={emailRef}
                 required
                 className={classes.inputFields}
               />
             </Form.Group>
+          </div>
+
+          {error && (
+            <p className="text-center" style={{ color: "var(--pink)" }}>
+              {error}
+            </p>
           )}
 
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="email"
-              placeholder="Email"
-              name="email"
-              ref={emailRef}
-              required
-              className={classes.inputFields}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              name="password"
-              ref={passwordRef}
-              required
-              className={classes.inputFields}
-            />
-          </Form.Group>
-        </div>
-
-        {error && (
-          <p className="text-center" style={{ color: "var(--pink)" }}>
-            {error}
-          </p>
-        )}
-
-        {loading ? (
-          <LoaderSmall text="Requesting..." />
-        ) : (
-          <Button type="submit" className={classes.submitBtn}>
-            {isLogin ? "Login" : "Sign Up"}
-          </Button>
-        )}
-
-        <div className="text-center mt-5">
-          {isLogin ? (
-            <p>
-              Don't have an account?{" "}
-              <span className={classes.switchText} onClick={switchModeHandler}>
-                Create Account
-              </span>
-            </p>
+          {loading ? (
+            <LoaderSmall text="Sending..." />
           ) : (
-            <p>
-              Have an account?{" "}
-              <span className={classes.switchText} onClick={switchModeHandler}>
-                Login
-              </span>
+            <Button type="submit" className={classes.submitBtn}>
+              Send Reset Link
+            </Button>
+          )}
+
+          <div className="text-center mt-3">
+            <p
+              className={classes.switchText}
+              style={{ cursor: "pointer" }}
+              onClick={() => setIsForgotPassword(false)}
+            >
+              Back to Login
+            </p>
+          </div>
+        </Form>
+      ) : (
+        <Form onSubmit={submitHandler} className={classes.authForm}>
+          <div className={classes.welcome}>
+            <h2 className={classes.title}>
+              {isLogin ? "Hello, Again" : "Create Your Account"}
+            </h2>
+            <hr />
+            <p className={classes.subtitle}>
+              {isLogin
+                ? "We are happy to have you back."
+                : "Join us and get started in seconds!"}
+            </p>
+          </div>
+
+          <div className={classes.formFields}>
+            {!isLogin && (
+              <Form.Group className="mb-3">
+                <Form.Control
+                  type="text"
+                  placeholder="Name"
+                  name="name"
+                  ref={nameRef}
+                  required
+                  className={classes.inputFields}
+                />
+              </Form.Group>
+            )}
+
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                name="email"
+                ref={emailRef}
+                required
+                className={classes.inputFields}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                ref={passwordRef}
+                required
+                className={classes.inputFields}
+              />
+            </Form.Group>
+          </div>
+
+          {error && (
+            <p className="text-center" style={{ color: "var(--pink)" }}>
+              {error}
             </p>
           )}
-        </div>
-      </Form>
+
+          {loading ? (
+            <LoaderSmall text="Requesting..." />
+          ) : (
+            <Button type="submit" className={classes.submitBtn}>
+              {isLogin ? "Login" : "Sign Up"}
+            </Button>
+          )}
+
+          {isLogin && (
+            <div className="text-center mt-2">
+              <p
+                className={classes.switchText}
+                style={{ cursor: "pointer" }}
+                onClick={() => setIsForgotPassword(true)}
+              >
+                Forgot Password?
+              </p>
+            </div>
+          )}
+
+          <div className="text-center mt-5">
+            {isLogin ? (
+              <p>
+                Don't have an account?{" "}
+                <span className={classes.switchText} onClick={switchModeHandler}>
+                  Create Account
+                </span>
+              </p>
+            ) : (
+              <p>
+                Have an account?{" "}
+                <span className={classes.switchText} onClick={switchModeHandler}>
+                  Login
+                </span>
+              </p>
+            )}
+          </div>
+        </Form>
+      )}
     </Container>
   );
 };
