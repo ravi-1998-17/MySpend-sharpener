@@ -3,15 +3,16 @@ import { Form, Button, Container } from "react-bootstrap";
 import classes from "../authentication/Auth.module.css";
 import { LoaderSmall } from "../common/StatsComps";
 import axios from "axios";
-import { AuthContext } from "@/context/AuthContext";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/slices/authSlice";
 
 const Auth = () => {
-  const { login } = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loadingLocal, setLoadingLocal] = useState(false);
+  const [errorLocal, setErrorLocal] = useState("");
 
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -19,18 +20,17 @@ const Auth = () => {
 
   const switchModeHandler = () => {
     setIsLogin((prev) => !prev);
-    setError("");
+    setErrorLocal("");
     setIsForgotPassword(false);
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    setLoadingLocal(true);
+    setErrorLocal("");
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    const name = nameRef.current?.value;
 
     try {
       let url;
@@ -48,21 +48,20 @@ const Auth = () => {
         returnSecureToken: true,
       });
 
-      login(data.idToken);
+      dispatch(login({ token: data.idToken, email: data.email }));
     } catch (err) {
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error.message);
-      } else {
-        setError("Authentication failed. Please try again.");
-      }
+      const message =
+        err.response?.data?.error?.message || "Authentication failed";
+      setErrorLocal(message);
+      dispatch(setError(message));
     }
-    setLoading(false);
+    setLoadingLocal(false);
   };
 
   const forgotPasswordHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    setLoadingLocal(true);
+    setErrorLocal("");
 
     const email = emailRef.current.value;
 
@@ -79,14 +78,13 @@ const Auth = () => {
       );
       setIsForgotPassword(false);
     } catch (err) {
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error.message);
-      } else {
-        setError("Failed to send reset email. Try again.");
-      }
+      const message =
+        err.response?.data?.error?.message || "Failed to send reset email";
+      setErrorLocal(message);
+      dispatch(setError(message));
     }
 
-    setLoading(false);
+    setLoadingLocal(false);
   };
 
   return (
@@ -113,13 +111,13 @@ const Auth = () => {
             </Form.Group>
           </div>
 
-          {error && (
+          {errorLocal && (
             <p className="text-center" style={{ color: "var(--pink)" }}>
               {error}
             </p>
           )}
 
-          {loading ? (
+          {loadingLocal ? (
             <LoaderSmall text="Sending..." />
           ) : (
             <Button type="submit" className={classes.submitBtn}>
@@ -188,13 +186,13 @@ const Auth = () => {
             </Form.Group>
           </div>
 
-          {error && (
+          {errorLocal && (
             <p className="text-center" style={{ color: "var(--pink)" }}>
               {error}
             </p>
           )}
 
-          {loading ? (
+          {loadingLocal ? (
             <LoaderSmall text="Requesting..." />
           ) : (
             <Button type="submit" className={classes.submitBtn}>
@@ -218,14 +216,20 @@ const Auth = () => {
             {isLogin ? (
               <p>
                 Don't have an account?{" "}
-                <span className={classes.switchText} onClick={switchModeHandler}>
+                <span
+                  className={classes.switchText}
+                  onClick={switchModeHandler}
+                >
                   Create Account
                 </span>
               </p>
             ) : (
               <p>
                 Have an account?{" "}
-                <span className={classes.switchText} onClick={switchModeHandler}>
+                <span
+                  className={classes.switchText}
+                  onClick={switchModeHandler}
+                >
                   Login
                 </span>
               </p>

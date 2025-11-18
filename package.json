@@ -19,7 +19,12 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
+<<<<<<< HEAD
     "react-router-dom": "^7.9.5"
+=======
+    "react-router-dom": "^7.9.5",
+    "redux": "^5.0.1"
+>>>>>>> cf00852a1b401cd20399fd0bb6135d07408cf281
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

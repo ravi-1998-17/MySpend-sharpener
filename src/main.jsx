@@ -5,14 +5,19 @@ import App from "./App.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { Provider } from "react-redux";
+import store from "./store/store";
+import { loadFromStorage } from "./store/slices/authSlice";
+
+// Load state from localStorage before app starts
+store.dispatch(loadFromStorage());
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
+      <Provider store={store}>
         <App />
-      </AuthProvider>
+      </Provider>
     </BrowserRouter>
   </StrictMode>
 );
