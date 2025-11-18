@@ -1,15 +1,33 @@
 import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const About = () => {
+  const theme = useSelector((state) => state.theme.mode);
+
+  const cardStyles = {
+    borderLeft: "5px solid var(--green)",
+    borderRadius: "14px",
+    background: theme === "dark" ? "var(--dark)" : "var(--light)",
+    color: theme === "dark" ? "var(--light)" : "var(--dark)",
+  };
+
+  const missionCardStyles = {
+    borderLeft: "6px solid var(--pink)",
+    borderRadius: "14px",
+    background: theme === "dark" ? "var(--dark)" : "var(--light)",
+    color: theme === "dark" ? "var(--light)" : "var(--dark)",
+  };
+
   return (
     <>
       {/* HERO SECTION */}
       <Container
         fluid
-        className="py-5 text-light text-center"
+        className="py-5 text-center"
         style={{
           background: "linear-gradient(135deg, var(--blue), var(--blue-light))",
+          color: "var(--light)",
         }}
       >
         <h1 className="fw-bold display-4">About MySpend</h1>
@@ -29,13 +47,7 @@ const About = () => {
         <Row className="g-4">
           {/* CARD 1 */}
           <Col md={6} lg={3}>
-            <Card
-              className="shadow-sm h-100"
-              style={{
-                borderLeft: "5px solid var(--green)",
-                borderRadius: "14px",
-              }}
-            >
+            <Card className="shadow-sm h-100" style={cardStyles}>
               <Card.Body>
                 <Card.Title>📊 Easy Tracking</Card.Title>
                 <Card.Text>
@@ -47,13 +59,7 @@ const About = () => {
 
           {/* CARD 2 */}
           <Col md={6} lg={3}>
-            <Card
-              className="shadow-sm h-100"
-              style={{
-                borderLeft: "5px solid var(--green)",
-                borderRadius: "14px",
-              }}
-            >
+            <Card className="shadow-sm h-100" style={cardStyles}>
               <Card.Body>
                 <Card.Title>💰 Smart Insights</Card.Title>
                 <Card.Text>
@@ -65,13 +71,7 @@ const About = () => {
 
           {/* CARD 3 */}
           <Col md={6} lg={3}>
-            <Card
-              className="shadow-sm h-100"
-              style={{
-                borderLeft: "5px solid var(--green)",
-                borderRadius: "14px",
-              }}
-            >
+            <Card className="shadow-sm h-100" style={cardStyles}>
               <Card.Body>
                 <Card.Title>☁️ Cloud Backup</Card.Title>
                 <Card.Text>
@@ -83,13 +83,7 @@ const About = () => {
 
           {/* CARD 4 */}
           <Col md={6} lg={3}>
-            <Card
-              className="shadow-sm h-100"
-              style={{
-                borderLeft: "5px solid var(--green)",
-                borderRadius: "14px",
-              }}
-            >
+            <Card className="shadow-sm h-100" style={cardStyles}>
               <Card.Body>
                 <Card.Title>⚡ Fast & Smooth</Card.Title>
                 <Card.Text>
@@ -105,13 +99,7 @@ const About = () => {
       <Container className="mt-5">
         <Row className="justify-content-center">
           <Col lg={10}>
-            <Card
-              className="shadow-sm p-4"
-              style={{
-                borderLeft: "6px solid var(--pink)",
-                borderRadius: "14px",
-              }}
-            >
+            <Card className="shadow-sm p-4" style={missionCardStyles}>
               <Card.Body>
                 <h3 className="fw-bold mb-3">Our Mission</h3>
                 <Card.Text className="fs-5" style={{ lineHeight: "1.7" }}>
@@ -128,7 +116,10 @@ const About = () => {
 
       {/* QUOTE */}
       <Container className="text-center mt-5 mb-5">
-        <p className="fs-5 fw-semibold" style={{ color: "var(--blue)" }}>
+        <p
+          className="fs-5 fw-semibold"
+          style={{ color: theme === "dark" ? "var(--green)" : "var(--blue)" }}
+        >
           “Every rupee counts — track it, understand it, control it.”
         </p>
       </Container>

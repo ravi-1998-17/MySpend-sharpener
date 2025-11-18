@@ -1,10 +1,10 @@
-import React, { useState, useRef, useContext } from "react";
+// components/auth/Auth.jsx
+import React, { useState, useRef } from "react";
 import { Form, Button, Container } from "react-bootstrap";
-import classes from "../authentication/Auth.module.css";
 import { LoaderSmall } from "../common/StatsComps";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { login } from "@/store/slices/authSlice";
+import { login, setError } from "@/store/slices/authSlice";
 
 const Auth = () => {
   const dispatch = useDispatch();
@@ -33,25 +33,22 @@ const Auth = () => {
     const password = passwordRef.current.value;
 
     try {
-      let url;
-      if (isLogin) {
-        url =
-          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE";
-      } else {
-        url =
-          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE";
-      }
+      let url = isLogin
+        ? "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE"
+        : "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE";
 
-      const { data } = await axios.post(url, {
-        email,
-        password,
-        returnSecureToken: true,
-      });
+      const { data } = await axios.post(url, { email, password, returnSecureToken: true });
 
-      dispatch(login({ token: data.idToken, email: data.email }));
+      dispatch(
+        login({
+          token: data.idToken,
+          email: data.email,
+          uid: data.localId,
+          photo: data.photoUrl || null,
+        })
+      );
     } catch (err) {
-      const message =
-        err.response?.data?.error?.message || "Authentication failed";
+      const message = err.response?.data?.error?.message || "Authentication failed";
       setErrorLocal(message);
       dispatch(setError(message));
     }
@@ -68,18 +65,12 @@ const Auth = () => {
     try {
       const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE`;
 
-      await axios.post(url, {
-        requestType: "PASSWORD_RESET",
-        email,
-      });
+      await axios.post(url, { requestType: "PASSWORD_RESET", email });
 
-      alert(
-        "Password reset link has been sent to your email. Please check your inbox."
-      );
+      alert("Password reset link has been sent to your email. Please check your inbox.");
       setIsForgotPassword(false);
     } catch (err) {
-      const message =
-        err.response?.data?.error?.message || "Failed to send reset email";
+      const message = err.response?.data?.error?.message || "Failed to send reset email";
       setErrorLocal(message);
       dispatch(setError(message));
     }
@@ -87,154 +78,172 @@ const Auth = () => {
     setLoadingLocal(false);
   };
 
+  const containerStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    backgroundColor: "var(--light)",
+    color: "var(--dark)",
+  };
+
+  const formStyle = {
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    maxWidth: "600px",
+    width: "100%",
+    padding: "1rem",
+  };
+
+  const titleStyle = {
+    fontSize: "2.5rem",
+    fontWeight: 500,
+    marginBottom: "10px",
+    textAlign: "start",
+  };
+
+  const hrStyle = {
+    width: "10%",
+    border: "2px solid var(--blue)",
+    marginBottom: "10px",
+  };
+
+  const subtitleStyle = {
+    color: "#666",
+    marginBottom: "30px",
+    textAlign: "start",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "1rem .75rem",
+    marginBottom: "15px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    fontSize: "15px",
+  };
+
+  const inputFocusStyle = {
+    borderColor: "var(--blue)",
+    outline: "none",
+  };
+
+  const submitBtnStyle = {
+    backgroundColor: "var(--blue)",
+    color: "var(--light)",
+    border: "none",
+    width: "100%",
+    padding: ".75rem",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    textTransform: "uppercase",
+    cursor: "pointer",
+  };
+
+  const switchTextStyle = {
+    color: "var(--blue)",
+    fontWeight: 600,
+    cursor: "pointer",
+  };
+
+  const errorStyle = {
+    color: "var(--pink)",
+    fontSize: "14px",
+    marginBottom: "15px",
+  };
+
   return (
-    <Container fluid className={`${classes.authContainer}`}>
+    <Container fluid style={containerStyle}>
       {isForgotPassword ? (
-        <Form onSubmit={forgotPasswordHandler} className={classes.authForm}>
-          <div className={classes.welcome}>
-            <h2 className={classes.title}>Forgot Password</h2>
-            <hr />
-            <p className={classes.subtitle}>
-              Enter your email and we will send you a reset link.
-            </p>
-          </div>
+        <Form onSubmit={forgotPasswordHandler} style={formStyle}>
+          <h2 style={titleStyle}>Forgot Password</h2>
+          <hr style={hrStyle} />
+          <p style={subtitleStyle}>Enter your email and we will send you a reset link.</p>
 
-          <div className={classes.formFields}>
-            <Form.Group className="mb-3">
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                ref={emailRef}
-                required
-                className={classes.inputFields}
-              />
-            </Form.Group>
-          </div>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              ref={emailRef}
+              required
+              style={inputStyle}
+            />
+          </Form.Group>
 
-          {errorLocal && (
-            <p className="text-center" style={{ color: "var(--pink)" }}>
-              {error}
-            </p>
-          )}
+          {errorLocal && <p style={errorStyle}>{errorLocal}</p>}
 
           {loadingLocal ? (
             <LoaderSmall text="Sending..." />
           ) : (
-            <Button type="submit" className={classes.submitBtn}>
+            <Button type="submit" style={submitBtnStyle}>
               Send Reset Link
             </Button>
           )}
 
-          <div className="text-center mt-3">
-            <p
-              className={classes.switchText}
-              style={{ cursor: "pointer" }}
-              onClick={() => setIsForgotPassword(false)}
-            >
-              Back to Login
-            </p>
-          </div>
+          <p
+            style={{ ...switchTextStyle, marginTop: "1rem" }}
+            onClick={() => setIsForgotPassword(false)}
+          >
+            Back to Login
+          </p>
         </Form>
       ) : (
-        <Form onSubmit={submitHandler} className={classes.authForm}>
-          <div className={classes.welcome}>
-            <h2 className={classes.title}>
-              {isLogin ? "Hello, Again" : "Create Your Account"}
-            </h2>
-            <hr />
-            <p className={classes.subtitle}>
-              {isLogin
-                ? "We are happy to have you back."
-                : "Join us and get started in seconds!"}
-            </p>
-          </div>
+        <Form onSubmit={submitHandler} style={formStyle}>
+          <h2 style={titleStyle}>{isLogin ? "Hello, Again" : "Create Your Account"}</h2>
+          <hr style={hrStyle} />
+          <p style={subtitleStyle}>
+            {isLogin ? "We are happy to have you back." : "Join us and get started in seconds!"}
+          </p>
 
-          <div className={classes.formFields}>
-            {!isLogin && (
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Name"
-                  name="name"
-                  ref={nameRef}
-                  required
-                  className={classes.inputFields}
-                />
-              </Form.Group>
-            )}
-
+          {!isLogin && (
             <Form.Group className="mb-3">
               <Form.Control
-                type="email"
-                placeholder="Email"
-                name="email"
-                ref={emailRef}
+                type="text"
+                placeholder="Name"
+                ref={nameRef}
                 required
-                className={classes.inputFields}
+                style={inputStyle}
               />
             </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                name="password"
-                ref={passwordRef}
-                required
-                className={classes.inputFields}
-              />
-            </Form.Group>
-          </div>
-
-          {errorLocal && (
-            <p className="text-center" style={{ color: "var(--pink)" }}>
-              {error}
-            </p>
           )}
+
+          <Form.Group className="mb-3">
+            <Form.Control type="email" placeholder="Email" ref={emailRef} required style={inputStyle} />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              ref={passwordRef}
+              required
+              style={inputStyle}
+            />
+          </Form.Group>
+
+          {errorLocal && <p style={errorStyle}>{errorLocal}</p>}
 
           {loadingLocal ? (
             <LoaderSmall text="Requesting..." />
           ) : (
-            <Button type="submit" className={classes.submitBtn}>
+            <Button type="submit" style={submitBtnStyle}>
               {isLogin ? "Login" : "Sign Up"}
             </Button>
           )}
 
           {isLogin && (
-            <div className="text-center mt-2">
-              <p
-                className={classes.switchText}
-                style={{ cursor: "pointer" }}
-                onClick={() => setIsForgotPassword(true)}
-              >
-                Forgot Password?
-              </p>
-            </div>
+            <p style={{ ...switchTextStyle, marginTop: "1rem" }} onClick={() => setIsForgotPassword(true)}>
+              Forgot Password?
+            </p>
           )}
 
-          <div className="text-center mt-5">
-            {isLogin ? (
-              <p>
-                Don't have an account?{" "}
-                <span
-                  className={classes.switchText}
-                  onClick={switchModeHandler}
-                >
-                  Create Account
-                </span>
-              </p>
-            ) : (
-              <p>
-                Have an account?{" "}
-                <span
-                  className={classes.switchText}
-                  onClick={switchModeHandler}
-                >
-                  Login
-                </span>
-              </p>
-            )}
-          </div>
+          <p style={{ marginTop: "3rem" }}>
+            {isLogin ? "Don't have an account? " : "Have an account? "}
+            <span style={switchTextStyle} onClick={switchModeHandler}>
+              {isLogin ? "Create Account" : "Login"}
+            </span>
+          </p>
         </Form>
       )}
     </Container>

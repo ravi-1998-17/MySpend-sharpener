@@ -1,47 +1,105 @@
+// components/layout/Header.jsx
 import React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar, Image, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import classes from "../layout/Header.module.css";
 import LogoutButton from "../common/LogoutButton";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleTheme } from "@/store/slices/themeSlice";
 
 function Header() {
+  const { email, photo } = useSelector((state) => state.auth);
+  const { theme } = useSelector((state) => state.theme);
+  const dispatch = useDispatch();
+
+  const navbarStyle = {
+    backgroundColor: theme === "dark" ? "#2f2f2f" : "#f5f5f5",
+    color: theme === "dark" ? "#fff" : "#2f2f2f",
+    padding: "0.75rem 0",
+  };
+
+  const linkColor = theme === "dark" ? "#fff" : "#2f2f2f";
+
   return (
-    <Navbar
-      expand="lg"
-      className="py-3 sticky-top"
-      style={{ backgroundColor: "var(--grey)" }}
-    >
-      <Container className="px-3">
+    <Navbar expand="lg" style={navbarStyle} className="sticky-top">
+      <Container className="d-flex align-items-center justify-content-between px-3">
+        {/* LOGO */}
         <Navbar.Brand
           as={NavLink}
           to="/"
-          className={`fs-3 fw-semibold ${classes.logo}`}
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 600,
+            color: theme === "dark" ? "#4586fd" : "#2b71fe",
+            textDecoration: "none",
+          }}
         >
           MySpend
         </Navbar.Brand>
 
-        <Navbar.Toggle
-          aria-controls="navbar-collapse"
-          className="border-0 shadow-none custom-toggle"
-        />
-        <Navbar.Collapse id="navbar-collapse" className="justify-content-end">
+        {/* NAV LINKS */}
+        <Navbar.Collapse className="d-flex justify-content-center flex-grow-1">
           <Nav className="gap-3 fs-5">
-            <Nav.Link as={NavLink} to="/" end className={`${classes.navLink}`}>
+            <Nav.Link
+              as={NavLink}
+              to="/"
+              end
+              style={{ color: linkColor, textDecoration: "none" }}
+            >
               Home
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/about" className={`${classes.navLink}`}>
+            <Nav.Link
+              as={NavLink}
+              to="/about"
+              style={{ color: linkColor, textDecoration: "none" }}
+            >
               About
             </Nav.Link>
             <Nav.Link
               as={NavLink}
               to="/contact"
-              className={`${classes.navLink}`}
+              style={{ color: linkColor, textDecoration: "none" }}
             >
               Contact
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <LogoutButton />
+
+        {/* RIGHT: THEME + PROFILE + LOGOUT */}
+        <div className="d-flex align-items-center gap-2">
+          {/* THEME TOGGLE */}
+          <Button
+            onClick={() => dispatch(toggleTheme())}
+            style={{
+              borderRadius: "50%",
+              width: 36,
+              height: 36,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: theme === "dark" ? "#444" : "#eee",
+              color: theme === "dark" ? "#fff" : "#2f2f2f",
+              border: "none",
+            }}
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </Button>
+
+          {/* PROFILE */}
+          {email && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Image
+                src={photo || "https://via.placeholder.com/40?text=👤"}
+                roundedCircle
+                width="40"
+                height="40"
+              />
+              <span style={{ color: linkColor, fontWeight: 500 }}>{email}</span>
+            </div>
+          )}
+
+          {/* LOGOUT */}
+          <LogoutButton />
+        </div>
       </Container>
     </Navbar>
   );

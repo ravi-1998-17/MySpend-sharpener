@@ -1,15 +1,15 @@
-import React, { useContext, useState, useEffect } from "react";
+// components/authentication/VerifyEmail.jsx
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Alert } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 const VerifyEmail = () => {
   const { token, isLoggedIn } = useSelector((state) => state.auth);
+  const { theme } = useSelector((state) => state.theme); // optional if you track theme
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
 
-  // Check verification status
   useEffect(() => {
     const checkVerificationStatus = async () => {
       if (!token) return;
@@ -19,8 +19,7 @@ const VerifyEmail = () => {
           { idToken: token }
         );
         const userData = res.data.users[0];
-        setEmailVerified(userData.emailVerified);
-        console.log("Email Verified:", userData.emailVerified);
+        setEmailVerified(!!userData.emailVerified);
       } catch (error) {
         console.error("Error checking verification status:", error);
       }
@@ -28,26 +27,22 @@ const VerifyEmail = () => {
     checkVerificationStatus();
   }, [token]);
 
-  // Send verification mail
   const handleVerifyEmail = async () => {
+    if (!token) return;
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post(
+      await axios.post(
         `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBfGfNN_C1BgPf5HAFIPLRsrFXTpkYZccE`,
-        {
-          requestType: "VERIFY_EMAIL",
-          idToken: token,
-        }
+        { requestType: "VERIFY_EMAIL", idToken: token }
       );
       setMessage("Verification email sent! Please check your inbox.");
-      console.log("Email verification sent:", res.data);
     } catch (error) {
       console.error(error);
       if (error.response) {
         const errCode = error.response.data.error.message;
         if (errCode === "INVALID_ID_TOKEN") {
-          setMessage("Invalid or expired login session. Please log in again.");
+          setMessage("Invalid session. Please log in again.");
         } else if (errCode === "USER_NOT_FOUND") {
           setMessage("User not found. Please sign up again.");
         } else {
@@ -61,26 +56,39 @@ const VerifyEmail = () => {
     }
   };
 
-  // Show only if logged in and not verified
   if (!isLoggedIn) return null;
 
+  const btnStyle = {
+    padding: "10px 20px",
+    fontWeight: 600,
+    borderRadius: "8px",
+    border: "none",
+    cursor: loading ? "not-allowed" : "pointer",
+    backgroundColor: "var(--pink)",
+    color: "var(--light)",
+  };
+
+  const alertStyle = {
+    marginTop: "1rem",
+    padding: "10px 15px",
+    borderRadius: "8px",
+    backgroundColor: theme === "dark" ? "var(--card-dark)" : "var(--grey)",
+    color: theme === "dark" ? "var(--light)" : "var(--dark)",
+  };
+
   return (
-    <div className="text-center mt-4">
+    <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
       {!emailVerified ? (
         <>
-          <Button variant="info" onClick={handleVerifyEmail} disabled={loading}>
+          <button style={btnStyle} onClick={handleVerifyEmail} disabled={loading}>
             {loading ? "Sending..." : "Verify Email"}
-          </Button>
-          {message && (
-            <Alert className="mt-3" variant="light">
-              {message}
-            </Alert>
-          )}
+          </button>
+          {message && <div style={alertStyle}>{message}</div>}
         </>
       ) : (
-        <Alert variant="success" className="mt-3">
+        <div style={{ ...alertStyle, backgroundColor: "var(--green)" }}>
           Your email is already verified!
-        </Alert>
+        </div>
       )}
     </div>
   );

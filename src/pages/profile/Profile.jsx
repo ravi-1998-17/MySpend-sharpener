@@ -20,7 +20,7 @@ const Profile = () => {
     photoUrl: "",
   });
 
-  // Fetch profile data
+  // Fetch profile details
   useEffect(() => {
     if (!token) return;
 
@@ -45,7 +45,7 @@ const Profile = () => {
     fetchProfile();
   }, [token]);
 
-  // Update profile
+  // Submit updated profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -66,7 +66,7 @@ const Profile = () => {
       );
 
       setProfileData({ displayName, photoUrl });
-      dispatch(login({ token, email })); // update Redux state
+      dispatch(login({ token, email }));
 
       setMsg("Profile updated successfully!");
     } catch (error) {
@@ -78,8 +78,19 @@ const Profile = () => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ marginTop: "10rem" }}>
-      <Card style={{ width: "100%", maxWidth: "400px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)", border: "none", borderRadius: "12px", padding: "1.5rem" }}>
+    <Container
+      className="d-flex justify-content-center align-items-center"
+      style={{ marginTop: "10rem" }}
+    >
+      <Card
+        className="p-4"
+        style={{
+          width: "100%",
+          maxWidth: "450px",
+          border: "none",
+          borderRadius: "14px",
+        }}
+      >
         <Card.Body>
           <h3 className="text-center mb-4">Edit Profile</h3>
 
@@ -106,7 +117,7 @@ const Profile = () => {
               />
             </Form.Group>
 
-            <Button type="submit" className="w-100" variant="light">
+            <Button type="submit" className="w-100 btn-primary">
               {loading ? <LoaderSmall text={"Updating..."} /> : "Update Profile"}
             </Button>
           </Form>
@@ -114,7 +125,10 @@ const Profile = () => {
           <VerifyEmail />
 
           {msg && (
-            <p className="text-center mt-3" style={{ color: "var(--pink)" }}>
+            <p
+              className="text-center mt-3"
+              style={{ color: "var(--pink)", fontWeight: 600 }}
+            >
               {msg}
             </p>
           )}

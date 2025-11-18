@@ -1,20 +1,138 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap");
 
+/* ============================= */
+/*        COLOR VARIABLES        */
+/* ============================= */
 :root {
   --font-family: "Lato", sans-serif;
+
   --pink: rgba(254, 91, 151, 1);
   --green: rgba(32, 211, 159, 1);
   --blue: rgba(43, 113, 254, 1);
   --blue-light: rgba(69, 134, 253, 1);
+
   --dark: rgba(47, 47, 47, 1);
   --light: rgba(255, 255, 255, 1);
   --grey: rgba(245, 245, 245, 1);
+
+  --bg-dark: #2f2f2f;
+  --card-dark: #3c3c3c;
+  --muted-light: #d0d0d0;
 }
 
+/* ============================= */
+/*          GLOBAL RESET         */
+/* ============================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: var(--font-family) !important;
-  font-style: normal;
+}
+
+/* ============================= */
+/*        LIGHT THEME MODE       */
+/* ============================= */
+body.light-theme {
+  background: var(--light);
+  color: var(--dark);
+}
+
+.light-theme .card,
+.light-theme .navbar,
+.light-theme form,
+.light-theme input,
+.light-theme textarea,
+.light-theme select {
+  background: var(--light);
+  color: var(--dark);
+}
+
+/* Buttons */
+.light-theme .btn-primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--light);
+}
+
+/* ============================= */
+/*        DARK THEME MODE        */
+/* ============================= */
+body.dark-theme {
+  background: var(--bg-dark);
+  color: var(--light);
+}
+
+/* Cards / Forms / Input fields */
+.dark-theme .card,
+.dark-theme .navbar,
+.dark-theme form,
+.dark-theme input,
+.dark-theme textarea,
+.dark-theme select {
+  background: var(--card-dark);
+  color: var(--light);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Buttons */
+.dark-theme .btn-primary {
+  background: var(--blue-light);
+  border-color: var(--blue-light);
+  color: var(--light);
+}
+
+.dark-theme .btn-outline-primary {
+  color: var(--light);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================= */
+/*   DARK THEME — PINK HEADER    */
+/* ============================= */
+.dark-theme .navbar {
+  background: var(--pink) !important;
+  color: var(--light) !important;
+}
+
+/* Make all header items white */
+.dark-theme .navbar * {
+  color: var(--light) !important;
+  fill: var(--light) !important;
+}
+
+/* Make logos/icons white */
+.dark-theme .navbar img,
+.dark-theme .navbar svg {
+  filter: brightness(0) invert(1);
+}
+
+/* Active nav link */
+.dark-theme .navbar .nav-link.active {
+  color: var(--light) !important;
+}
+
+/* Premium button */
+.dark-theme .btn-premium {
+  background: transparent;
+  border: 2px solid var(--light);
+  color: var(--light) !important;
+}
+
+/* ============================= */
+/*            CARD UI            */
+/* ============================= */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(14, 19, 28, 0.06);
+}
+
+.dark-theme .card {
+  box-shadow: none;
+}
+
+.dark-theme .profile-img,
+.dark-theme img.profile-img {
+  filter: none !important;
+  opacity: 1 !important;
 }

@@ -15,9 +15,16 @@ import { PageLoader } from "./components/common/StatsComps";
 
 const App = () => {
   const { isLoggedIn, isAuthChecked } = useSelector((state) => state.auth);
+  const theme = useSelector((state) => state.theme.mode); // ⬅ added
   const [isProfileComplete, setIsProfileComplete] = useState(false);
   const [showProfileAlert, setShowProfileAlert] = useState(false);
   const location = useLocation();
+
+  // ⬅ Apply theme to body
+  useEffect(() => {
+    document.body.classList.remove("light-theme", "dark-theme");
+    document.body.classList.add(theme === "dark" ? "dark-theme" : "light-theme");
+  }, [theme]);
 
   useEffect(() => {
     if (isLoggedIn && !isProfileComplete) {

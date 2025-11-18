@@ -1,30 +1,89 @@
-.loginContainer{
-    background-color: var(--blue);
-    color: var(--light);
-    height: 100vh;
-    overflow: hidden;
-
-    display: flex;
-    justify-content: center;
+.loginContainer {
+  display: flex;
+  min-height: 100vh;
 }
 
-.leftSide{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
-    flex-direction: column;
-    text-align: center;
+/* LEFT SIDE (Pink section in light theme, grey in dark) */
+.leftSide {
+  flex: 1;
+  background: var(--pink);
+  color: var(--light);
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
+/* DARK THEME FIX — change left side background when dark */
+body.dark-theme .leftSide {
+  background: var(--blue-light);
+  color: white;
+}
+
+/* Piggy Icon */
 .leftSide i {
-    font-size: 20rem !important;
-    height: 425px !important;
-    width: 320px !important;
+  font-size: 7rem;
+  margin-bottom: 1rem;
+  color: white;
 }
 
-@media (max-width: 900px) {
-    .leftSide{
-        display: none;
-    }
+/* Blue tone in dark mode */
+body.dark-theme .leftSide i {
+  color: white;
+}
+
+/* Heading & line */
+.textBox h1 {
+  font-size: 2.5rem;
+  font-weight: 900;
+}
+
+.line {
+  width: 20%;
+  height: 0.5rem;
+  margin: 1rem auto;
+  background: white;
+  border-radius: 8px;
+}
+
+body.dark-theme .line {
+  background: white;
+}
+
+.textBox p {
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+/* RIGHT SIDE */
+.rightSide {
+  flex: 1;
+  padding: 3rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* BACKGROUND FIXES */
+body.light-theme .rightSide {
+  background: var(--light);
+  color: var(--dark);
+}
+
+body.dark-theme .rightSide {
+  background: var(--bg-dark);
+  color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .loginContainer {
+    flex-direction: column;
+  }
+
+  .leftSide {
+    padding: 3rem 1.5rem;
+  }
 }
