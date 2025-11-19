@@ -1,40 +1,38 @@
 .loginContainer {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden; /* prevent page scroll */
 }
 
-/* LEFT SIDE (Pink section in light theme, grey in dark) */
+/* LEFT SIDE */
 .leftSide {
   flex: 1;
   background: var(--pink);
   color: var(--light);
-  padding: 4rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 4rem 2rem;
+  min-height: 100vh;
 }
 
-/* DARK THEME FIX — change left side background when dark */
 body.dark-theme .leftSide {
   background: var(--blue-light);
   color: white;
 }
 
-/* Piggy Icon */
 .leftSide i {
   font-size: 7rem;
   margin-bottom: 1rem;
   color: white;
 }
 
-/* Blue tone in dark mode */
 body.dark-theme .leftSide i {
   color: white;
 }
 
-/* Heading & line */
 .textBox h1 {
   font-size: 2.5rem;
   font-weight: 900;
@@ -60,13 +58,14 @@ body.dark-theme .line {
 /* RIGHT SIDE */
 .rightSide {
   flex: 1;
-  padding: 3rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  overflow: hidden; /* no page scroll */
 }
 
-/* BACKGROUND FIXES */
 body.light-theme .rightSide {
   background: var(--light);
   color: var(--dark);
@@ -75,6 +74,14 @@ body.light-theme .rightSide {
 body.dark-theme .rightSide {
   background: var(--bg-dark);
   color: white;
+}
+
+/* AUTH FORM INTERNAL SCROLL (if small screen) */
+.rightSide form {
+  width: 100%;
+  max-width: 600px;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 /* RESPONSIVE */

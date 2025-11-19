@@ -168,6 +168,7 @@ const Auth = () => {
               ref={emailRef}
               required
               style={inputStyle}
+              name="email"
             />
           </Form.Group>
 
@@ -204,12 +205,20 @@ const Auth = () => {
                 ref={nameRef}
                 required
                 style={inputStyle}
+                name="name"
               />
             </Form.Group>
           )}
 
           <Form.Group className="mb-3">
-            <Form.Control type="email" placeholder="Email" ref={emailRef} required style={inputStyle} />
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              ref={emailRef}
+              required
+              style={inputStyle}
+              name="email"
+            />
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -219,6 +228,7 @@ const Auth = () => {
               ref={passwordRef}
               required
               style={inputStyle}
+              name="password"
             />
           </Form.Group>
 

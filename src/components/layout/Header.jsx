@@ -1,104 +1,156 @@
 // components/layout/Header.jsx
 import React from "react";
-import { Container, Nav, Navbar, Image, Button } from "react-bootstrap";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import LogoutButton from "../common/LogoutButton";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "@/store/slices/themeSlice";
+import { logout } from "@/store/slices/authSlice";
 
 function Header() {
-  const { email, photo } = useSelector((state) => state.auth);
-  const { theme } = useSelector((state) => state.theme);
+  const { email } = useSelector((state) => state.auth);
+  const theme = useSelector((state) => state.theme.mode);
   const dispatch = useDispatch();
 
-  const navbarStyle = {
-    backgroundColor: theme === "dark" ? "#2f2f2f" : "#f5f5f5",
-    color: theme === "dark" ? "#fff" : "#2f2f2f",
-    padding: "0.75rem 0",
+  const navbarBg = `var(${theme === "dark" ? "--pink" : "--blue"})`;
+  const logoColor = `var(--light)`;
+  const linkColor = `var(--light)`;
+
+  const logoutStyles = {
+    fontSize: ".85rem",
+    padding: "5px 14px",
+    borderRadius: "8px",
+    transition: "0.3s",
+    background: "none",
+    color: "var(--light)",
+    border: "1px solid var(--light)",
+    cursor: "pointer",
   };
 
-  const linkColor = theme === "dark" ? "#fff" : "#2f2f2f";
-
   return (
-    <Navbar expand="lg" style={navbarStyle} className="sticky-top">
+    <Navbar
+      expand="lg"
+      className="sticky-top"
+      style={{ backgroundColor: navbarBg, padding: "1rem 0" }}
+    >
       <Container className="d-flex align-items-center justify-content-between px-3">
         {/* LOGO */}
         <Navbar.Brand
           as={NavLink}
           to="/"
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: 600,
-            color: theme === "dark" ? "#4586fd" : "#2b71fe",
-            textDecoration: "none",
-          }}
+          style={{ fontSize: "1.5rem", fontWeight: 300, color: logoColor }}
         >
           MySpend
         </Navbar.Brand>
 
-        {/* NAV LINKS */}
-        <Navbar.Collapse className="d-flex justify-content-center flex-grow-1">
-          <Nav className="gap-3 fs-5">
-            <Nav.Link
-              as={NavLink}
-              to="/"
-              end
-              style={{ color: linkColor, textDecoration: "none" }}
-            >
-              Home
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/about"
-              style={{ color: linkColor, textDecoration: "none" }}
-            >
-              About
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/contact"
-              style={{ color: linkColor, textDecoration: "none" }}
-            >
-              Contact
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-
-        {/* RIGHT: THEME + PROFILE + LOGOUT */}
-        <div className="d-flex align-items-center gap-2">
-          {/* THEME TOGGLE */}
+        {/* RIGHT: Hamburger + Theme + Logout (for collapsed) */}
+        <div className="d-flex align-items-center gap-2 d-lg-none">
+          {/* Theme Toggle */}
           <Button
             onClick={() => dispatch(toggleTheme())}
             style={{
-              borderRadius: "50%",
               width: 36,
               height: 36,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: theme === "dark" ? "#444" : "#eee",
-              color: theme === "dark" ? "#fff" : "#2f2f2f",
-              border: "none",
+              color: "var(--light)",
             }}
           >
-            {theme === "dark" ? "☀️" : "🌙"}
+            <i
+              className={`bi ${
+                theme === "dark" ? "bi-moon" : "bi-brightness-high-fill"
+              }`}
+              style={{ fontSize: "1.5rem" }}
+            ></i>
           </Button>
 
-          {/* PROFILE */}
+          {/* Logout */}
+          <button
+            style={logoutStyles}
+            onClick={() => dispatch(logout())}
+            onMouseEnter={(e) => {
+              e.target.style.background = "var(--blue-light)";
+              e.target.style.color =
+                theme === "dark" ? "var(--dark)" : "var(--light)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "none";
+              e.target.style.color = "var(--light)";
+            }}
+          >
+            LOGOUT
+          </button>
+
+          {/* Hamburger */}
+          <Navbar.Toggle
+            aria-controls="responsive-navbar-nav"
+            style={{ border: "none", boxShadow: "none" }}
+          />
+        </div>
+
+        {/* Navbar Links & User */}
+        <Navbar.Collapse
+          id="responsive-navbar-nav"
+          className="d-flex flex-column flex-lg-row justify-content-center flex-grow-1"
+        >
+          <Nav className="d-flex flex-column flex-lg-row gap-3 fs-6 w-100 justify-content-center">
+            <Nav.Link as={NavLink} to="/" end style={{ color: linkColor }}>
+              Home
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/about" style={{ color: linkColor }}>
+              About
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/contact" style={{ color: linkColor }}>
+              Contact
+            </Nav.Link>
+          </Nav>
+
+       
+        </Navbar.Collapse>
+
+        {/* Desktop Right (Theme + Logout + Email) */}
+        <div className="d-none d-lg-flex align-items-center gap-4">
+          {/* Theme Toggle */}
+          <Button
+            onClick={() => dispatch(toggleTheme())}
+            style={{
+              width: 36,
+              height: 36,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--light)",
+            }}
+          >
+            <i
+              className={`bi ${
+                theme === "dark" ? "bi-moon" : "bi-brightness-high-fill"
+              }`}
+              style={{ fontSize: "1.5rem" }}
+            ></i>
+          </Button>
+
+          {/* USER */}
           {email && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Image
-                src={photo || "https://via.placeholder.com/40?text=👤"}
-                roundedCircle
-                width="40"
-                height="40"
-              />
-              <span style={{ color: linkColor, fontWeight: 500 }}>{email}</span>
-            </div>
+            <span style={{ color: linkColor, fontWeight: 500 }}>{email}</span>
           )}
 
-          {/* LOGOUT */}
-          <LogoutButton />
+          {/* Logout */}
+          <button
+            style={logoutStyles}
+            onClick={() => dispatch(logout())}
+            onMouseEnter={(e) => {
+              e.target.style.background = "var(--blue-light)";
+              e.target.style.color =
+                theme === "dark" ? "var(--dark)" : "var(--light)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "none";
+              e.target.style.color = "var(--light)";
+            }}
+          >
+            LOGOUT
+          </button>
         </div>
       </Container>
     </Navbar>
