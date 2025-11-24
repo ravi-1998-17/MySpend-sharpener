@@ -42,7 +42,6 @@ function Header() {
           MySpend
         </Navbar.Brand>
 
-        {/* RIGHT: Hamburger + Theme + Logout (for collapsed) */}
         <div className="d-flex align-items-center gap-2 d-lg-none">
           {/* Theme Toggle */}
           <Button
@@ -104,13 +103,9 @@ function Header() {
               Contact
             </Nav.Link>
           </Nav>
-
-       
         </Navbar.Collapse>
 
-        {/* Desktop Right (Theme + Logout + Email) */}
         <div className="d-none d-lg-flex align-items-center gap-4">
-          {/* Theme Toggle */}
           <Button
             onClick={() => dispatch(toggleTheme())}
             style={{

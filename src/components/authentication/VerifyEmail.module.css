@@ -1,0 +1,41 @@
+.container {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+/* Button */
+.verifyBtn {
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--pink);
+  color: var(--light);
+}
+
+.verifyBtn:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+/* Message box */
+.alert {
+  margin-top: 1rem;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: var(--grey);
+  color: var(--dark);
+}
+
+/* Dark theme override */
+.darkAlert {
+  background-color: var(--card-dark) !important;
+  color: var(--light) !important;
+}
+
+/* Email already verified message */
+.success {
+  background-color: var(--green) !important;
+  color: var(--light) !important;
+}

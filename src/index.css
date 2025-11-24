@@ -1,8 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap");
 
-/* ============================= */
-/*        COLOR VARIABLES        */
-/* ============================= */
+
 :root {
   --font-family: "Lato", sans-serif;
 
@@ -20,9 +18,7 @@
   --muted-light: #d0d0d0;
 }
 
-/* ============================= */
-/*          GLOBAL RESET         */
-/* ============================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -30,9 +26,7 @@
   font-family: var(--font-family) !important;
 }
 
-/* ============================= */
-/*        LIGHT THEME MODE       */
-/* ============================= */
+
 body.light-theme {
   background: var(--light);
   color: var(--dark);
@@ -55,15 +49,12 @@ body.light-theme {
   color: var(--light);
 }
 
-/* ============================= */
-/*        DARK THEME MODE        */
-/* ============================= */
+
 body.dark-theme {
   background: var(--bg-dark);
   color: var(--light);
 }
 
-/* Cards / Forms / Input fields */
 .dark-theme .card,
 .dark-theme .navbar,
 .dark-theme form,
@@ -87,15 +78,11 @@ body.dark-theme {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-/* ============================= */
-/*   DARK THEME — PINK HEADER    */
-/* ============================= */
 .dark-theme .navbar {
   background: var(--pink) !important;
   color: var(--light) !important;
 }
 
-/* Make all header items white */
 .dark-theme .navbar * {
   color: var(--light) !important;
   fill: var(--light) !important;
@@ -119,9 +106,7 @@ body.dark-theme {
   color: var(--light) !important;
 }
 
-/* ============================= */
-/*            CARD UI            */
-/* ============================= */
+
 .card {
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(14, 19, 28, 0.06);

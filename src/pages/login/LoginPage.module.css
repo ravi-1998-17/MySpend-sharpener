@@ -1,7 +1,7 @@
 .loginContainer {
   display: flex;
   height: 100vh;
-  overflow: hidden; /* prevent page scroll */
+  overflow: hidden; 
 }
 
 /* LEFT SIDE */
@@ -63,7 +63,7 @@ body.dark-theme .line {
   align-items: center;
   min-height: 100vh;
   padding: 3rem 2rem;
-  overflow: hidden; /* no page scroll */
+  overflow: hidden; 
 }
 
 body.light-theme .rightSide {
@@ -76,7 +76,6 @@ body.dark-theme .rightSide {
   color: white;
 }
 
-/* AUTH FORM INTERNAL SCROLL (if small screen) */
 .rightSide form {
   width: 100%;
   max-width: 600px;
@@ -84,7 +83,6 @@ body.dark-theme .rightSide {
   overflow-y: auto;
 }
 
-/* RESPONSIVE */
 @media (max-width: 992px) {
   .loginContainer {
     flex-direction: column;

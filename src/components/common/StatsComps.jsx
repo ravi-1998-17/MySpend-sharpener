@@ -1,4 +1,3 @@
-// components/common/StatsComps.jsx
 import React from "react";
 import { Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
